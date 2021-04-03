@@ -12,8 +12,12 @@ except socket.error as err:
     print('Error: %s' % err)
     sys.exit()
 
+counter = 0
 
 while True:
+
     rawData, addr = receiver.recvfrom(1024)
     data = rawData.decode()
-    print(data)
+    print(f'Counter: {counter}')
+    print(f'Data: {data}')
+    counter += 1
