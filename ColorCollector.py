@@ -8,32 +8,49 @@ class Modes:
 
 
 class ColorCollector:
+    _sampleRes = None
+    _color = (255, 0, 0)
+    _counter = 0
 
     @classmethod
-    def get_updated_color(cls, mode=0):
+    def set_sample(cls, width, height):
+        if not cls._sampleRes:
+            cls._sampleRes = (0, 0, width, height)
+
+    @classmethod
+    def update_color(cls, mode=-1):
         if mode == Modes.screen:
-            color = cls.__screen_color()
+            cls._color = cls.__screen_color()
         elif mode == Modes.keyboard:
-            color = cls.__keyboard_color()
+            cls._color = cls.__keyboard_color()
         elif mode == Modes.static:
-            color = cls.__static_color()
+            cls._color = cls.__static_color()
         else:
-            color = cls.__error_color()
+            cls._color = cls.__error_color()
 
-        return color
+    @classmethod
+    def get_color(cls):
+        return cls._color
 
-    @staticmethod
-    def __screen_color(sensitivity=10):
-        image = ImageGrab.grab()
+    @classmethod
+    def __screen_color(cls, sensitivity=10):
+        image = ImageGrab.grab(bbox=cls._sampleRes)
+
         temp_palette = image.convert('P', palette=Image.ADAPTIVE, colors=sensitivity)
-
         palette = temp_palette.getpalette()
+
+        ColorCollector._previous_palette = palette
         color_counts = sorted(temp_palette.getcolors(), reverse=True)
         colors = list()
-        for i in range(sensitivity):
-            palette_index = color_counts[i][1]
-            dominant_color = palette[palette_index * 3:palette_index * 3 + 3]
-            colors.append(tuple(dominant_color))
+
+        try:
+            for i in range(sensitivity):
+                palette_index = color_counts[i][1]
+                dominant_color = palette[palette_index * 3:palette_index * 3 + 3]
+                colors.append(tuple(dominant_color))
+
+        except IndexError:
+            return (255, 255, 255)
 
         return colors[0]
 
@@ -46,5 +63,5 @@ class ColorCollector:
         raise NotImplementedError
 
     @staticmethod
-    def __error_color():
-        raise NotImplementedError
+    def __error_color(error_color=(255, 0, 0)):
+        return error_color

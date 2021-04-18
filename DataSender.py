@@ -1,5 +1,6 @@
 import socket
 import sys
+import threading
 from ColorCollector import ColorCollector
 
 host = "127.0.0.1"
@@ -11,11 +12,13 @@ except socket.error as err:
     print('Error: %s' % err)
     sys.exit()
 
-while True:
-    data = ColorCollector.get_updated_color()
+colorCollector = ColorCollector()
+colorCollector.set_sample(800, 600)
 
+while True:
     try:
-        sender.sendto(str(data).encode(), (host, port))
+        threading.Thread(target=colorCollector.update_color(0)).start()
+        sender.sendto(str(colorCollector.get_color()).encode(), (host, port))
 
     except socket.error as err:
         print('Error: %s' % err)
