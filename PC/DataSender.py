@@ -1,7 +1,7 @@
 import socket
 import sys
 import threading
-from ColorCollector import ColorCollector
+from PC.ColorCollector import ColorCollector
 
 host = "127.0.0.1"
 port = 3000
