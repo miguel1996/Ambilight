@@ -3,7 +3,7 @@ import sys
 import threading
 from PC.ColorCollector import ColorCollector
 
-host = "127.0.0.1"
+host = "192.168.1.10"
 port = 3000
 
 try:
@@ -18,6 +18,7 @@ while True:
     try:
         threading.Thread(target=colorCollector.update_color(0)).start()
         sender.sendto(str(colorCollector.get_color()).encode(), (host, port))
+        print("Sent data")
 
     except socket.error as err:
         print('Error: %s' % err)
