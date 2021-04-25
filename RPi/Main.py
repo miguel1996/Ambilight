@@ -14,7 +14,7 @@ except socket.error as err:
     print('Error: %s' % err)
     sys.exit()
 
-ledController = LEDCollector()
+ledController = LEDController()
 
 while True:
     rawData, addr = receiver.recvfrom(1024)
