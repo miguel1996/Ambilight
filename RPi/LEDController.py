@@ -6,7 +6,7 @@ class LEDController:
     LED_PIN = 18
     LED_FREQ_HZ = 800000
     LED_DMA = 10
-    LED_BRIGHTNESS = 255
+    LED_BRIGHTNESS = 200
     LED_INVERT = False
     LED_CHANNEL = 0
     _strip = None
