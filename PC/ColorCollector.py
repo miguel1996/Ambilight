@@ -12,6 +12,9 @@ class ColorCollector:
     _color = (255, 0, 0)
     _counter = 0
 
+    def __init__(self, sample_width, sample_height):
+        self.set_sample(sample_width, sample_height)
+
     @classmethod
     def set_sample(cls, width, height):
         if not cls._sampleRes:
