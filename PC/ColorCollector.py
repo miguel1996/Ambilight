@@ -21,7 +21,7 @@ class ColorCollector:
             cls._sampleRes = (0, 0, width, height)
 
     @classmethod
-    def update_color(cls, mode=-1):
+    def update_color(cls, mode=0):
         if mode == Modes.screen:
             cls._color = cls.__screen_color()
         elif mode == Modes.keyboard:
