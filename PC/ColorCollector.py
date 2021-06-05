@@ -53,7 +53,7 @@ class ColorCollector:
                 colors.append(tuple(dominant_color))
 
         except IndexError:
-            return (255, 255, 255)
+            return cls._color
 
         return colors[0]
 
