@@ -3,7 +3,7 @@ import sys
 import threading
 from PC.ColorCollector import ColorCollector
 
-host = "192.168.1.10"
+host = "192.168.1.15"
 port = 3000
 
 try:
