@@ -1,4 +1,4 @@
-from PIL import ImageGrab, Image
+from PIL import ImageGrab
 
 
 class Modes:
@@ -11,6 +11,9 @@ class ColorCollector:
     _sampleRes = None
     _color = (255, 0, 0)
     _counter = 0
+    _factor = 20
+    _width = 1920
+    _height = 1080
 
     def __init__(self, sample_width, sample_height):
         self.set_sample(sample_width, sample_height)
@@ -18,7 +21,9 @@ class ColorCollector:
     @classmethod
     def set_sample(cls, width, height):
         if not cls._sampleRes:
-            cls._sampleRes = (0, 0, width, height)
+            cls._width = width
+            cls._height = height
+            cls._sampleRes = (int(width * 0.4), int(height * 0.4), int(width * 0.8), int(height * 0.8))
 
     @classmethod
     def update_color(cls, mode=0):
@@ -36,26 +41,11 @@ class ColorCollector:
         return cls._color
 
     @classmethod
-    def __screen_color(cls, sensitivity=10):
-        image = ImageGrab.grab(bbox=cls._sampleRes)
+    def __screen_color(cls):
+        image = ImageGrab.grab(bbox=cls._sampleRes).resize((cls._factor, int(cls._factor / (cls._width/cls._height))))
+        color = image.quantize(1).convert("RGB").getpixel((0, 0))
 
-        temp_palette = image.convert('P', palette=Image.ADAPTIVE, colors=sensitivity)
-        palette = temp_palette.getpalette()
-
-        ColorCollector._previous_palette = palette
-        color_counts = sorted(temp_palette.getcolors(), reverse=True)
-        colors = list()
-
-        try:
-            for i in range(sensitivity):
-                palette_index = color_counts[i][1]
-                dominant_color = palette[palette_index * 3:palette_index * 3 + 3]
-                colors.append(tuple(dominant_color))
-
-        except IndexError:
-            return cls._color
-
-        return colors[0]
+        return color
 
     @staticmethod
     def __keyboard_color():
